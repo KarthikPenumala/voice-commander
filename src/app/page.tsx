@@ -6,11 +6,14 @@ import KakiController from '@/components/kaki/KakiController';
 import KakiOverlay from '@/components/kaki/KakiOverlay';
 import MockBrowser from '@/components/kaki/MockBrowser';
 
+export type Language = 'en-US' | 'te-IN';
+
 export default function Home() {
   const [isEnabled, setIsEnabled] = useState(true);
   const [isRecording, setIsRecording] = useState(false);
   const [isTranscribing, setIsTranscribing] = useState(false);
   const [transcribedText, setTranscribedText] = useState('');
+  const [language, setLanguage] = useState<Language>('en-US');
   const [settings, setSettings] = useState<KakiSettings>({
     fontSize: 2,
     color: 'hsl(var(--foreground))',
@@ -48,6 +51,8 @@ export default function Home() {
         setTranscribedText={setTranscribedText}
         settings={settings}
         setSettings={setSettings}
+        language={language}
+        setLanguage={setLanguage}
       />
       
       <div className="w-full max-w-4xl p-4 md:p-8 rounded-xl bg-card/50">

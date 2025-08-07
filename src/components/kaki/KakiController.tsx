@@ -7,9 +7,17 @@ import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import type { KakiSettings } from '@/lib/types';
-import { Mic, Power, Settings as SettingsIcon, LoaderCircle } from 'lucide-react';
+import { Mic, Power, Settings as SettingsIcon, LoaderCircle, Languages } from 'lucide-react';
 import { useRef, type FC, type Dispatch, type SetStateAction } from 'react';
 import SettingsDialog from './SettingsDialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { Language } from '@/app/page';
 
 interface KakiControllerProps {
   isEnabled: boolean;
@@ -21,6 +29,8 @@ interface KakiControllerProps {
   setTranscribedText: Dispatch<SetStateAction<string>>;
   settings: KakiSettings;
   setSettings: Dispatch<SetStateAction<KakiSettings>>;
+  language: Language;
+  setLanguage: Dispatch<SetStateAction<Language>>;
 }
 
 const KakiController: FC<KakiControllerProps> = ({
@@ -33,6 +43,8 @@ const KakiController: FC<KakiControllerProps> = ({
   setTranscribedText,
   settings,
   setSettings,
+  language,
+  setLanguage,
 }) => {
   const { toast } = useToast();
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
@@ -66,7 +78,7 @@ const KakiController: FC<KakiControllerProps> = ({
               return;
             }
             try {
-              const { transcription } = await transcribeVoice({ audioDataUri: base64Audio });
+              const { transcription } = await transcribeVoice({ audioDataUri: base64Audio, language });
               setTranscribedText(transcription);
             } catch (error) {
               console.error('Transcription error:', error);
@@ -107,7 +119,7 @@ const KakiController: FC<KakiControllerProps> = ({
   };
 
   return (
-    <Card className="w-full max-w-sm shadow-lg">
+    <Card className="w-full max-w-md shadow-lg">
       <CardContent className="p-6 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
           <Label htmlFor="kaki-power" className="flex items-center gap-2 cursor-pointer">
@@ -117,6 +129,16 @@ const KakiController: FC<KakiControllerProps> = ({
           <Switch id="kaki-power" checked={isEnabled} onCheckedChange={setIsEnabled} />
         </div>
         <div className="flex items-center gap-2">
+          <Select value={language} onValueChange={(value) => setLanguage(value as Language)}>
+            <SelectTrigger className="w-20">
+              <Languages className="h-4 w-4 text-muted-foreground" />
+              <SelectValue placeholder="Language" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="en-US">EN</SelectItem>
+              <SelectItem value="te-IN">TE</SelectItem>
+            </SelectContent>
+          </Select>
           <Button 
             variant={isRecording ? 'destructive' : 'default'} 
             size="icon" 
