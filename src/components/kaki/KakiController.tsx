@@ -8,7 +8,7 @@ import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
 import type { KakiSettings } from '@/lib/types';
 import { Mic, Power, Settings as SettingsIcon, LoaderCircle } from 'lucide-react';
-import type { FC, Dispatch, SetStateAction, useRef } from 'react';
+import { useRef, type FC, type Dispatch, type SetStateAction } from 'react';
 import SettingsDialog from './SettingsDialog';
 
 interface KakiControllerProps {
